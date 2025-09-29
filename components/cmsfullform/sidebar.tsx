@@ -65,6 +65,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { ReactElement } from "react";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -956,7 +957,7 @@ export default function Sidebar() {
         return (
           <div className="p-2">
             <div className="flex items-center gap-2">
-              <item.icon className="h-4 w-4" />
+              <div className="h-4 w-4"> </div>
               <span className="font-medium">{item.label}</span>
               {item.badge && (
                 <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">

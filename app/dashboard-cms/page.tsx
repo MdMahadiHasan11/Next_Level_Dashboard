@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 export default function DashboardCMSPage() {
   return (
     <Layout>
-      {/* <Content /> */} <p>Dashboard CMS</p>
+      {/* <Content /> */}
+      <p>Hasan</p>
     </Layout>
   );
 }
