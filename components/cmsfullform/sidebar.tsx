@@ -866,7 +866,7 @@ export default function Sidebar({
         return (
           <div className="p-2">
             <div className="flex items-center gap-2">
-              <div className="h-4 w-4"> </div>
+              {item.icon && <item.icon className="h-4 w-4" />}
               <span className="font-medium">{item.label}</span>
               {item.badge && (
                 <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">
@@ -886,7 +886,7 @@ export default function Sidebar({
       return (
         <div className="p-2">
           <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-            <item.icon className="h-4 w-4" />
+            {item.icon && <item.icon className="h-4 w-4" />}
             <span className="font-medium">{item.label}</span>
             {item.badge && (
               <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">
@@ -929,7 +929,9 @@ export default function Sidebar({
         }}
         title={isCollapsed ? item.label : undefined}
       >
-        <item.icon className="h-4 w-4 flex-shrink-0 sidebar-menu-icon" />
+        {item.icon && (
+          <item.icon className="h-4 w-4 flex-shrink-0 sidebar-menu-icon" />
+        )}
 
         {showText && (
           <>
@@ -980,6 +982,8 @@ export default function Sidebar({
             </PopoverTrigger>
             <PopoverContent
               side="right"
+              align="start"
+              sideOffset={8}
               className="w-auto min-w-[200px] max-w-[300px]"
               onMouseEnter={() => setPopoverOpen(true)}
               onMouseLeave={() => setPopoverOpen(false)}
@@ -1125,21 +1129,11 @@ export default function Sidebar({
                 {mobileMenuState === "full" ? (
                   <>
                     <Link
-                      href="https://cmsfullform.com/"
-                      target="_blank"
+                      href="/dashboard-cms"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3"
                     >
-                      <img
-                        src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                        alt="CMSFullForm"
-                        width={32}
-                        height={32}
-                        className="flex-shrink-0"
-                      />
-                      <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">
-                        CMSFullForm
-                      </span>
+                      MH
                     </Link>
                     <button
                       onClick={onToggleMenuState}
@@ -1151,13 +1145,13 @@ export default function Sidebar({
                   </>
                 ) : (
                   <div className="flex justify-center w-full">
-                    <img
-                      src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                      alt="CMSFullForm"
-                      width={32}
-                      height={32}
-                      className="flex-shrink-0"
-                    />
+                    <Link
+                      href="/dashboard-cms"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3"
+                    >
+                      MH
+                    </Link>
                   </div>
                 )}
               </div>
@@ -1214,7 +1208,7 @@ export default function Sidebar({
                 </div>
               </div>
 
-              <div className="px-2 py-4 border-t border-gray-200 dark:border-[#1F1F23]">
+              <div className="px-2 py-2 border-t border-gray-200 dark:border-[#1F1F23]">
                 <div className="space-y-1">
                   <NavItem
                     item={{
@@ -1224,14 +1218,14 @@ export default function Sidebar({
                       icon: Settings,
                     }}
                   />
-                  <NavItem
+                  {/* <NavItem
                     item={{
                       id: "help",
                       label: "Help",
                       href: "/help",
                       icon: HelpCircle,
                     }}
-                  />
+                  /> */}
                 </div>
               </div>
             </div>
@@ -1240,6 +1234,8 @@ export default function Sidebar({
       </>
     );
   }
+
+  console.log("show text", showText);
 
   return (
     <nav
@@ -1266,52 +1262,37 @@ export default function Sidebar({
     >
       {menuState !== "hidden" && (
         <div className="h-full flex flex-col relative">
-          <div className="h-16 px-3 flex items-center border-b border-gray-200 dark:border-[#1F1F23]">
+          {/* Header icon part start */}
+          <div className="h-16 px-3 bg-gray-50 flex items-center border-b border-gray-200 dark:border-[#1F1F23]">
             {showText ? (
               <Link
-                href="https://cmsfullform.com/"
-                target="_blank"
+                href="/dashboard-cms"
+                // target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 w-full"
               >
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 hidden dark:block"
-                />
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 block dark:hidden"
-                />
                 <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white transition-opacity duration-200">
-                  CMSFullForm
+                  MH.com
                 </span>
               </Link>
             ) : (
               <div className="flex justify-center w-full">
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 hidden dark:block"
-                />
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 block dark:hidden"
-                />
+                <Link
+                  href="/dashboard-cms"
+                  // target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 w-full"
+                >
+                  <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white transition-opacity duration-200">
+                    MH
+                  </span>
+                </Link>
               </div>
             )}
           </div>
+          {/* Header icon part end */}
 
+          {/* search part */}
           {showText && (
             <div className="px-3 py-3 border-b border-gray-200 dark:border-[#1F1F23]">
               <div className="relative">
@@ -1334,7 +1315,9 @@ export default function Sidebar({
               </div>
             </div>
           )}
+          {/* search part end */}
 
+          {/* main menu */}
           <div
             className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2 scrollbar-none"
             style={{
@@ -1345,11 +1328,15 @@ export default function Sidebar({
             <div className="space-y-6">
               {filteredMenuData.map((section) => (
                 <div key={section.id}>
+                  {/* main menu label */}
                   {showText && (
-                    <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider sidebar-section-label transition-opacity duration-200">
+                    <div className="px-3 mb-2 text-xs   uppercase  duration-200 font-bold">
                       {section.label}
                     </div>
                   )}
+                  {/* main menu label end */}
+
+                  {/* main menu items start */}
                   <div className="space-y-1">
                     {section.items.map((item) => (
                       <NavItem
@@ -1359,12 +1346,15 @@ export default function Sidebar({
                       />
                     ))}
                   </div>
+                  {/* main menu items end */}
                 </div>
               ))}
             </div>
           </div>
+          {/* main menu end */}
 
-          <div className="px-2 py-4 border-t border-gray-200 dark:border-[#1F1F23]">
+          {/*           {/* footer */}
+          <div className="px-2 py-2 border-t bg-slate-50 border-gray-200 dark:border-[#1F1F23]">
             <div className="space-y-1">
               <NavItem
                 item={{
@@ -1374,20 +1364,22 @@ export default function Sidebar({
                   icon: Settings,
                 }}
               />
-              <NavItem
+              {/* <NavItem
                 item={{
                   id: "help",
                   label: "Help",
                   href: "/help",
                   icon: HelpCircle,
                 }}
-              />
+              /> */}
             </div>
           </div>
+          {/* footer end */}
 
+          {/*{/* resize bar */}
           {menuState === "full" && (
             <div
-              className="absolute top-0 right-0 w-1 h-full cursor-col-resize bg-transparent hover:bg-blue-500/20 transition-colors group"
+              className="absolute top-0 right-0 w-0.5 h-full cursor-col-resize bg-transparent hover:bg-black/15 transition-colors group"
               onMouseDown={handleMouseDown}
             >
               <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-gray-300 dark:bg-gray-600 rounded-l opacity-0 group-hover:opacity-100 transition-opacity" />

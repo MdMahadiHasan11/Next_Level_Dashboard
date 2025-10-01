@@ -97,7 +97,7 @@ export default function Layout({ children }: LayoutProps) {
       if (mobileMenuState === "collapsed") {
         return "4rem"; // 64px for collapsed mobile sidebar
       }
-      return "0"; // Full mobile sidebar is overlay, so no margin needed
+      return "0";
     }
     if (menuState === "hidden") {
       return "0";
@@ -126,7 +126,7 @@ export default function Layout({ children }: LayoutProps) {
           onClick={handleOutsideClick}
           style={{
             pointerEvents: "auto",
-            left: "16rem", // Start after the sidebar
+            left: "16rem",
             top: "0",
             right: "0",
             bottom: "0",
