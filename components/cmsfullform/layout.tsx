@@ -11,89 +11,77 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+type MenuState = "full" | "collapsed" | "hidden";
+
 export default function Layout({ children }: LayoutProps) {
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [menuState, setMenuState] = useState<"full" | "collapsed" | "hidden">(
-    "full"
-  );
+  const [menuState, setMenuState] = useState<MenuState>("full");
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(256);
-  const [mobileMenuState, setMobileMenuState] = useState<
-    "full" | "collapsed" | "hidden"
-  >("collapsed");
+  const [mobileMenuState, setMobileMenuState] =
+    useState<MenuState>("collapsed");
+  const [previousDesktopState, setPreviousDesktopState] =
+    useState<MenuState>("full");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    const checkMenuState = () => {
-      if (typeof window !== "undefined") {
-        if ((window as any).menuState) {
-          setMenuState((window as any).menuState);
+    const handleResize = () => {
+      const isDesktop = window.innerWidth >= 1024; // lg breakpoint
+      setIsMobile(!isDesktop);
+
+      if (!isDesktop) {
+        if (menuState !== "hidden") {
+          setPreviousDesktopState(menuState);
         }
-        if ((window as any).isMobile !== undefined) {
-          setIsMobile((window as any).isMobile);
-        }
-        if ((window as any).sidebarWidth) {
-          setSidebarWidth((window as any).sidebarWidth);
-        }
-        if ((window as any).mobileMenuState) {
-          setMobileMenuState((window as any).mobileMenuState);
+      } else {
+        if (menuState === "hidden" && previousDesktopState !== "hidden") {
+          setMenuState(previousDesktopState);
         }
       }
     };
 
-    checkMenuState();
-
-    const interval = setInterval(checkMenuState, 50);
-
-    return () => clearInterval(interval);
-  }, []);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [menuState, previousDesktopState]);
 
   const toggleMenuState = () => {
     if (isMobile) {
-      if (mobileMenuState === "collapsed") {
-        setMobileMenuState("full");
-      } else if (mobileMenuState === "full") {
-        setMobileMenuState("hidden");
-      } else {
-        setMobileMenuState("collapsed");
-      }
-      (window as any).mobileMenuState =
-        mobileMenuState === "collapsed"
-          ? "full"
-          : mobileMenuState === "full"
-          ? "hidden"
-          : "collapsed";
+      setMobileMenuState((prev) => {
+        switch (prev) {
+          case "collapsed":
+            return "full";
+          case "full":
+            return "hidden";
+          case "hidden":
+            return "collapsed";
+          default:
+            return "collapsed";
+        }
+      });
     } else {
-      if (menuState === "collapsed") {
-        setMenuState("full");
-      } else if (menuState === "full") {
-        setMenuState("hidden");
-      } else {
-        setMenuState("collapsed");
-      }
-      (window as any).menuState =
-        menuState === "collapsed"
-          ? "full"
-          : menuState === "full"
-          ? "hidden"
-          : "collapsed";
+      setMenuState((prev) => {
+        switch (prev) {
+          case "full":
+            return "collapsed";
+          case "collapsed":
+            return "hidden";
+          case "hidden":
+            return "full";
+          default:
+            return "full";
+        }
+      });
     }
   };
 
   const handleOutsideClick = () => {
-    console.log(
-      "[v0] Backdrop clicked! Current mobile state:",
-      mobileMenuState
-    );
     if (isMobile && mobileMenuState === "full") {
-      console.log("[v0] Setting mobile menu to collapsed");
       setMobileMenuState("collapsed");
-      (window as any).externalMobileMenuState = "collapsed";
-      (window as any).mobileMenuState = "collapsed";
     }
   };
 
@@ -122,7 +110,16 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className={`flex h-screen ${theme === "dark" ? "dark" : ""}`}>
-      <Sidebar />
+      <Sidebar
+        menuState={menuState}
+        mobileMenuState={mobileMenuState}
+        isMobile={isMobile}
+        sidebarWidth={sidebarWidth}
+        onToggleMenuState={toggleMenuState}
+        onSetMenuState={setMenuState}
+        onSidebarWidthChange={setSidebarWidth}
+        onMobileMenuStateChange={setMobileMenuState}
+      />
       {isMobile && mobileMenuState === "full" && (
         <div
           className="fixed bg-black/30 z-[65]"
@@ -143,7 +140,7 @@ export default function Layout({ children }: LayoutProps) {
         }}
       >
         <header className="h-16 border-b border-gray-200 dark:border-[#1F1F23] flex-shrink-0">
-          <TopNav />
+          <TopNav onToggleMenu={toggleMenuState} />
         </header>
         <main className="flex-1 overflow-auto p-3 sm:p-6 bg-white dark:bg-[#0F0F12] min-w-0 relative z-10">
           {children}

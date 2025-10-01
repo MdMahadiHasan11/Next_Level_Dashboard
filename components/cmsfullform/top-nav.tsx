@@ -24,13 +24,11 @@ import {
 import { ThemeToggle } from "../theme-toggle";
 import Link from "next/link";
 
-export default function TopNav() {
-  const handleMenuToggle = () => {
-    if (typeof window !== "undefined" && (window as any).toggleMenuState) {
-      (window as any).toggleMenuState();
-    }
-  };
+interface TopNavProps {
+  onToggleMenu: () => void;
+}
 
+export default function TopNav({ onToggleMenu }: TopNavProps) {
   return (
     <div className="flex items-center justify-between h-full px-4 lg:px-6">
       {/* Left side - Menu toggle and Breadcrumbs */}
@@ -39,7 +37,7 @@ export default function TopNav() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={handleMenuToggle}
+          onClick={onToggleMenu}
           className="hidden lg:flex p-2"
           title="Toggle Menu"
         >
@@ -50,7 +48,7 @@ export default function TopNav() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={handleMenuToggle}
+          onClick={onToggleMenu}
           className="lg:hidden p-2"
           title="Toggle Mobile Menu"
         >

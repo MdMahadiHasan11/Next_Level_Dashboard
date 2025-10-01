@@ -64,15 +64,14 @@ import {
   Menu,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { ReactElement } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input"; // Added Input component
+import { Input } from "@/components/ui/input";
 
 type MenuState = "full" | "collapsed" | "hidden";
 
@@ -100,6 +99,17 @@ interface MenuSection {
   id: string;
   label: string;
   items: MenuItem[];
+}
+
+interface SidebarProps {
+  menuState: MenuState;
+  mobileMenuState: MenuState;
+  isMobile: boolean;
+  sidebarWidth: number;
+  onToggleMenuState: () => void;
+  onSetMenuState: (state: MenuState) => void;
+  onSidebarWidthChange: (width: number) => void;
+  onMobileMenuStateChange: (state: MenuState) => void;
 }
 
 const menuData: MenuSection[] = [
@@ -728,17 +738,18 @@ const menuData: MenuSection[] = [
   },
 ];
 
-export default function Sidebar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [menuState, setMenuState] = useState<MenuState>("full");
-  const [previousDesktopState, setPreviousDesktopState] =
-    useState<MenuState>("full");
-  const [isMobile, setIsMobile] = useState(false);
+export default function Sidebar({
+  menuState,
+  mobileMenuState,
+  isMobile,
+  sidebarWidth,
+  onToggleMenuState,
+  onSetMenuState,
+  onSidebarWidthChange,
+  onMobileMenuStateChange,
+}: SidebarProps) {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [sidebarWidth, setSidebarWidth] = useState(256); // Default 16rem = 256px
-  const [mobileMenuState, setMobileMenuState] =
-    useState<MenuState>("collapsed");
 
   const filterMenuItems = (items: MenuItem[], query: string): MenuItem[] => {
     if (!query.trim()) return items;
@@ -781,111 +792,9 @@ export default function Sidebar() {
     }))
     .filter((section) => section.items.length > 0);
 
-  const toggleMobileMenuState = () => {
-    setMobileMenuState((prev) => {
-      switch (prev) {
-        case "collapsed":
-          return "full";
-        case "full":
-          return "hidden";
-        case "hidden":
-          return "collapsed";
-        default:
-          return "collapsed";
-      }
-    });
-  };
-
-  const toggleMenuState = () => {
-    if (isMobile) {
-      toggleMobileMenuState();
-    } else {
-      setMenuState((prev) => {
-        switch (prev) {
-          case "full":
-            return "collapsed";
-          case "collapsed":
-            return "hidden";
-          case "hidden":
-            return "full";
-          default:
-            return "full";
-        }
-      });
-    }
-  };
-
-  const setMenuStateFromCustomizer = (state: MenuState) => {
-    if (!isMobile) {
-      setMenuState(state);
-    }
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      const isDesktop = window.innerWidth >= 1024; // lg breakpoint
-      setIsMobile(!isDesktop);
-
-      if (!isDesktop) {
-        if (menuState !== "hidden") {
-          setPreviousDesktopState(menuState);
-        }
-      } else {
-        if (menuState === "hidden" && previousDesktopState !== "hidden") {
-          setMenuState(previousDesktopState);
-        }
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, [menuState, previousDesktopState]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      (window as any).toggleMenuState = toggleMenuState;
-      (window as any).menuState = isMobile ? mobileMenuState : menuState;
-      (window as any).isMobile = isMobile;
-      (window as any).setIsMobileMenuOpen = setIsMobileMenuOpen;
-      (window as any).isMobileMenuOpen = isMobileMenuOpen;
-      (window as any).setMenuStateFromCustomizer = setMenuStateFromCustomizer;
-      (window as any).sidebarWidth = sidebarWidth;
-      (window as any).mobileMenuState = mobileMenuState;
-      (window as any).setMobileMenuState = setMobileMenuState;
-    }
-  }, [menuState, isMobile, isMobileMenuOpen, sidebarWidth, mobileMenuState]);
-
-  useEffect(() => {
-    if (!isMobile) return;
-
-    const checkExternalMobileState = () => {
-      if (
-        typeof window !== "undefined" &&
-        (window as any).externalMobileMenuState
-      ) {
-        const externalState = (window as any).externalMobileMenuState;
-        if (externalState !== mobileMenuState) {
-          console.log(
-            "[v0] Syncing mobile menu state from external:",
-            externalState
-          );
-          setMobileMenuState(externalState);
-          // Clear the external state after syncing
-          delete (window as any).externalMobileMenuState;
-        }
-      }
-    };
-
-    const interval = setInterval(checkExternalMobileState, 10);
-    return () => clearInterval(interval);
-  }, [isMobile, mobileMenuState]);
-
   function handleNavigation() {
     if (isMobile) {
-      setMobileMenuState("collapsed");
+      onMobileMenuStateChange("collapsed");
     }
   }
 
@@ -911,7 +820,7 @@ export default function Sidebar() {
         200,
         Math.min(400, startWidth + (e.clientX - startX))
       );
-      setSidebarWidth(newWidth);
+      onSidebarWidthChange(newWidth);
     };
 
     const handleMouseUp = () => {
@@ -1191,16 +1100,6 @@ export default function Sidebar() {
     );
   }
 
-  const getSidebarWidth = () => {
-    if (isMobile) {
-      return "w-64";
-    }
-    if (menuState === "collapsed") {
-      return "w-16";
-    }
-    return `w-[${sidebarWidth}px]`;
-  };
-
   const showText = menuState === "full";
 
   if (isMobile) {
@@ -1243,7 +1142,7 @@ export default function Sidebar() {
                       </span>
                     </Link>
                     <button
-                      onClick={toggleMobileMenuState}
+                      onClick={onToggleMenuState}
                       className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                       title="Hide sidebar"
                     >
@@ -1289,8 +1188,8 @@ export default function Sidebar() {
               <div
                 className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2 scrollbar-none"
                 style={{
-                  scrollbarWidth: "none" /* Firefox */,
-                  msOverflowStyle: "none" /* IE and Edge */,
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
                 }}
               >
                 <div className="space-y-6">
@@ -1439,8 +1338,8 @@ export default function Sidebar() {
           <div
             className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2 scrollbar-none"
             style={{
-              scrollbarWidth: "none" /* Firefox */,
-              msOverflowStyle: "none" /* IE and Edge */,
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
             }}
           >
             <div className="space-y-6">
