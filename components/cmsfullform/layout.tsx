@@ -12,9 +12,21 @@ interface LayoutProps {
 }
 
 type MenuState = "full" | "collapsed" | "hidden";
+type CRUDOperation = "CREATE" | "READ" | "UPDATE" | "DELETE";
 
+type PermissionsObject = {
+  [key: string]: CRUDOperation[];
+};
+
+const exampleUserPermissions: PermissionsObject = {
+  dashboard: ["READ"],
+  analytics: ["READ"],
+};
 export default function Layout({ children }: LayoutProps) {
   const { theme } = useTheme();
+  const [userPermissions, setUserPermissions] = useState(
+    exampleUserPermissions
+  );
   const [mounted, setMounted] = useState(false);
   const [menuState, setMenuState] = useState<MenuState>("full");
   const [isMobile, setIsMobile] = useState(false);
@@ -119,6 +131,7 @@ export default function Layout({ children }: LayoutProps) {
         onSetMenuState={setMenuState}
         onSidebarWidthChange={setSidebarWidth}
         onMobileMenuStateChange={setMobileMenuState}
+        userPermissions={userPermissions}
       />
       {isMobile && mobileMenuState === "full" && (
         <div
