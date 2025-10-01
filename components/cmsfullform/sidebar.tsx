@@ -129,8 +129,8 @@ const menuData: MenuSection[] = [
         label: "Dashboard",
         href: "/dashboard-cms",
         icon: Home,
-        // badge: "3",
-        permissionKey: "dashboard",
+        badge: "3",
+        // permissionKey: "dashboard",
         children: [
           {
             id: "analytics",
