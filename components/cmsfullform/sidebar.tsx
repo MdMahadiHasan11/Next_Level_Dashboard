@@ -129,8 +129,8 @@ const menuData: MenuSection[] = [
         label: "Dashboard",
         href: "/dashboard-cms",
         icon: Home,
-        badge: "3",
-        // permissionKey: "dashboard",
+        // badge: "3",
+        permissionKey: "dashboard",
         children: [
           {
             id: "analytics",
@@ -1650,20 +1650,13 @@ export default function Sidebar({
                 {mobileMenuState === "full" ? (
                   <>
                     <Link
-                      href="https://cmsfullform.com/"
+                      href="/dashboard-cms"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3"
                     >
-                      <img
-                        src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                        alt="CMSFullForm"
-                        width={32}
-                        height={32}
-                        className="flex-shrink-0"
-                      />
                       <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">
-                        CMSFullForm
+                        MH
                       </span>
                     </Link>
                     <button
@@ -1676,13 +1669,14 @@ export default function Sidebar({
                   </>
                 ) : (
                   <div className="flex justify-center w-full">
-                    <img
-                      src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                      alt="CMSFullForm"
-                      width={32}
-                      height={32}
-                      className="flex-shrink-0"
-                    />
+                    <Link
+                      href="/dashboard-cms"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3"
+                    >
+                      <div className="flex justify-center w-full">MH</div>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -1794,46 +1788,24 @@ export default function Sidebar({
           <div className="h-16 px-3 flex items-center border-b border-gray-200 dark:border-[#1F1F23]">
             {showText ? (
               <Link
-                href="https://cmsfullform.com/"
-                target="_blank"
+                href="/dashboard-cms"
+                // target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 w-full"
               >
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 hidden dark:block"
-                />
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 block dark:hidden"
-                />
                 <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white transition-opacity duration-200">
-                  CMSFullForm
+                  MH.com
                 </span>
               </Link>
             ) : (
-              <div className="flex justify-center w-full">
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 hidden dark:block"
-                />
-                <img
-                  src="https://cmsfullform.com/themes/cmsfullform/Backend/Assets/favicon/apple-icon-60x60.png"
-                  alt="CMSFullForm"
-                  width={32}
-                  height={32}
-                  className="flex-shrink-0 block dark:hidden"
-                />
-              </div>
+              <Link
+                href="/dashboard-cms"
+                // target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 w-full"
+              >
+                <div className="flex justify-center w-full">MH</div>
+              </Link>
             )}
           </div>
 
