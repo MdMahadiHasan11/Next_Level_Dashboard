@@ -19,7 +19,11 @@ type PermissionsObject = {
 };
 
 const exampleUserPermissions: PermissionsObject = {
-  products: ["CREATE", "READ", "DELETE"],
+  projects: ["READ"],
+
+  dashboardAnalytics: ["CREATE"],
+  clients: ["READ"],
+  sales_report: ["READ"],
 };
 export default function Layout({ children }: LayoutProps) {
   const { theme } = useTheme();
