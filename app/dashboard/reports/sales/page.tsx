@@ -1,7 +1,5 @@
 "use client";
-
 import { useState } from "react";
-
 import {
   Card,
   CardContent,
@@ -9,13 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import { PermissionButton } from "@/common/permission-button";
 import TestModal from "./modal";
 import { collectPermittedHrefs } from "@/lib/permission-button";
@@ -53,7 +45,7 @@ export default function ExamplePage() {
     console.log(tourId);
   };
   console.log("openModal", openModal);
-
+  const [pagination, setPagination] = useState({ page: 1, limit: 10 });
   return (
     <div className="container mx-auto p-8 space-y-8">
       <h1 className="text-3xl font-bold">Permission-Based Menu System</h1>
@@ -70,7 +62,8 @@ export default function ExamplePage() {
             <div key={item.id}>
               <PermissionButton
                 buttonId="invoice-air-ticket-create"
-                id={item.id}
+                // id={item.id}
+                // query={{ page: 1, limit: 10, id: item.id }}
                 onClick={() => console.log("click button")}
                 className="min-w-[150px]"
               />

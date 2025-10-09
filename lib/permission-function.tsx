@@ -1,18 +1,9 @@
-// import {
-//   CRUDOperation,
-//   menuData,
-//   MenuItem,
-//   SubMenuItem,
-//   userPermissions,
-// } from "@/constant/sidebar-manu-data";
-
 import {
   CRUDOperation,
   menuData,
   MenuItem,
   SubMenuItem,
 } from "@/constant/sidebar-manu-data";
-import { usePermissions } from "@/hooks/use-permission";
 type PermissionsObject = Record<string, CRUDOperation[]>;
 
 // for middleware

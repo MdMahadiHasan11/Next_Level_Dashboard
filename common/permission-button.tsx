@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-
 import { findMenuItemById, hasPermission } from "@/lib/permission-button";
 import { usePermissions } from "@/hooks/use-permission";
 import { MenuItem } from "@/constant/button-manu-data";
@@ -13,9 +12,24 @@ interface PermissionButtonProps {
   className?: string;
   onClick?: () => void;
   id?: string;
+  query?: { page?: number; limit?: number; [key: string]: any }; // Support pagination and other query params
 }
 
+// Custom function to serialize query parameters
+const serializeQuery = (query: { [key: string]: any } | undefined): string => {
+  if (!query) return "";
+  const params = Object.entries(query)
+    .filter(([_, value]) => value !== undefined && value !== null) // Exclude undefined/null values
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
+    .join("&");
+  return params ? `?${params}` : "";
+};
+
 export function PermissionButton({
+  query,
   id,
   onClick,
   buttonId,
@@ -45,14 +59,10 @@ export function PermissionButton({
   }
 
   const handleClick = () => {
-    // If has href, navigate
+    // If has href, navigate with query parameters
     if (menuItem?.href) {
-      if (id) {
-        router.push(menuItem.href + `?id=${id}`);
-      } else {
-        router.push(menuItem.href);
-      }
-
+      const queryString = serializeQuery(query);
+      router.push(`${menuItem.href}${id ? `/${id}` : ""}${queryString}`);
       return;
     }
     // Fallback to custom onClick prop
