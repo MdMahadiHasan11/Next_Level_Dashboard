@@ -119,7 +119,7 @@ export const menuData: MenuSection[] = [
               {
                 id: "sales-reports",
                 label: "Sales Reports",
-                href: "/dashboard/reports/sales",
+                href: "/dashboard-cms/reports/sales",
                 icon: TrendingUp,
                 permissionKey: "sales_report",
               },

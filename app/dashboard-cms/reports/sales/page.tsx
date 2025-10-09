@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
 import { PermissionButton } from "@/common/permission-button";
-import TestModal from "./modal";
 import { collectPermittedHrefs } from "@/lib/permission-button";
 import { sidebarAllHref } from "@/lib/permission-function";
 import { usePermissions } from "@/hooks/use-permission";
+import TestModal from "./modal";
 // Example array of items to map over
 const items = [
   {

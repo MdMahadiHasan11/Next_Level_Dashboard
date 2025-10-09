@@ -26,13 +26,13 @@ export interface UserPermissions {
   [module: string]: PermissionAction[];
 }
 
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { Eye, Edit, Trash2, Plus } from "lucide-react";
 
 export const MENU_CONFIG: MenuItem[] = [
   {
     id: "invoice-air-ticket-create",
     label: "Create Air Ticket Invoice",
-    // icon: <Plus className="w-4 h-4" />,
+    icon: <Plus className="w-4 h-4" />,
     variant: "default",
     href: "/invoices/air-ticket/create",
     hrefId: "/invoices/air-ticket/create/:path*",
@@ -53,17 +53,16 @@ export const MENU_CONFIG: MenuItem[] = [
       action: "READ",
     },
   },
-  // {
-  //   id: "invoice-air-ticket-view",
-  //   label: "View Air Ticket Invoices",
-  //   icon: <Eye className="w-4 h-4" />,
-  //   href: "/invoices/air-ticket",
-  //   permission: {
-  //     module: "invoice_air_ticket",
-  //     action: "READ",
-  //   },
-  //   opensModal: false,
-  // },
+  {
+    id: "invoice-air-ticket-view",
+    label: "View Air Ticket Invoices",
+    icon: <Eye className="w-4 h-4" />,
+    href: "/invoices/air-ticket/read",
+    permission: {
+      module: "invoice_air_ticket",
+      action: "READ",
+    },
+  },
   // {
   //   id: "invoice-air-ticket-edit",
   //   label: "Edit Air Ticket Invoice",
@@ -72,7 +71,6 @@ export const MENU_CONFIG: MenuItem[] = [
   //     module: "invoice_air_ticket",
   //     action: "UPDATE",
   //   },
-  //   opensModal: true,
   // },
   // {
   //   id: "invoice-air-ticket-delete",
@@ -82,8 +80,6 @@ export const MENU_CONFIG: MenuItem[] = [
   //     module: "invoice_air_ticket",
   //     action: "DELETE",
   //   },
-  //   opensModal: true,
-  //   modalId: "delete-confirmation-modal",
   //   variant: "destructive",
   // },
 ];
