@@ -24,6 +24,8 @@ import {
   Settings,
   X,
 } from "lucide-react";
+import { hasPermissionSet, mainMenuData } from "@/lib/permission-function";
+import { usePermissions } from "@/hooks/use-permission";
 
 type MenuState = "full" | "collapsed" | "hidden";
 
@@ -38,7 +40,6 @@ interface SidebarProps {
   onSetMenuState: (state: MenuState) => void;
   onSidebarWidthChange: (width: number) => void;
   onMobileMenuStateChange: (state: MenuState) => void;
-  userPermissions?: PermissionsObject; // Updated to use new permissions structure
 }
 
 export default function Sidebar({
@@ -50,104 +51,11 @@ export default function Sidebar({
   onSetMenuState,
   onSidebarWidthChange,
   onMobileMenuStateChange,
-  userPermissions = {}, // Default to empty object
 }: SidebarProps) {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-
-  const hasPermission = (
-    permissionKey?: string,
-    requiredOperation: CRUDOperation = "READ"
-  ): boolean => {
-    // If no permission key is specified, allow access
-    if (!permissionKey) return true;
-
-    // Check if the permission key exists in user permissions
-    const operations = userPermissions[permissionKey];
-
-    // If the key doesn't exist or has no operations, deny access
-    if (!operations || operations.length === 0) return false;
-
-    // Check if the required operation is in the allowed operations
-    return operations.includes(requiredOperation);
-  };
-
-  const filterByPermissions = (items: MenuItem[]): MenuItem[] => {
-    return items
-      .filter((item) =>
-        hasPermission(item.permissionKey, item.requiredOperation)
-      )
-      .map((item) => {
-        if (item.children) {
-          const filteredChildren = filterSubMenuByPermissions(item.children);
-          return {
-            ...item,
-            children:
-              filteredChildren.length > 0 ? filteredChildren : undefined,
-          };
-        }
-        return item;
-      });
-  };
-
-  const filterSubMenuByPermissions = (items: SubMenuItem[]): SubMenuItem[] => {
-    return items
-      .filter((item) =>
-        hasPermission(item.permissionKey, item.requiredOperation)
-      )
-      .map((item) => {
-        if (item.children) {
-          const filteredChildren = filterSubMenuByPermissions(item.children);
-          return {
-            ...item,
-            children:
-              filteredChildren.length > 0 ? filteredChildren : undefined,
-          };
-        }
-        return item;
-      });
-  };
-
-  const filterMenuItems = (items: MenuItem[], query: string): MenuItem[] => {
-    if (!query.trim()) return items;
-
-    const searchLower = query.toLowerCase();
-
-    const filterRecursive = (
-      item: MenuItem | SubMenuItem
-    ): MenuItem | SubMenuItem | null => {
-      const matchesLabel = item.label.toLowerCase().includes(searchLower);
-
-      if (item.children) {
-        const filteredChildren = item.children
-          .map((child) => filterRecursive(child))
-          .filter(Boolean) as SubMenuItem[];
-
-        if (matchesLabel || filteredChildren.length > 0) {
-          return {
-            ...item,
-            children:
-              filteredChildren.length > 0 ? filteredChildren : item.children,
-          };
-        }
-      } else if (matchesLabel) {
-        return item;
-      }
-
-      return null;
-    };
-
-    return items
-      .map((item) => filterRecursive(item))
-      .filter(Boolean) as MenuItem[];
-  };
-
-  const filteredMenuData = menuData
-    .map((section) => ({
-      ...section,
-      items: filterMenuItems(filterByPermissions(section.items), searchQuery),
-    }))
-    .filter((section) => section.items.length > 0);
+  const { permissions } = usePermissions();
+  const filteredMenuData = mainMenuData({ searchQuery, permissions });
 
   function handleNavigation() {
     if (isMobile) {
@@ -278,13 +186,21 @@ export default function Sidebar({
         )}
         onClick={() => {
           if (
-            hasPermission(item.permissionKey, item.requiredOperation) &&
+            hasPermissionSet(
+              permissions,
+              item.permissionKey,
+              item.requiredOperation
+            ) &&
             hasChildren &&
             !isCollapsed
           ) {
             toggleExpanded(itemId);
           } else if (
-            hasPermission(item.permissionKey, item.requiredOperation) &&
+            hasPermissionSet(
+              permissions,
+              item.permissionKey,
+              item.requiredOperation
+            ) &&
             item.href &&
             !hasChildren
           ) {
@@ -406,12 +322,20 @@ export default function Sidebar({
         )}
         onClick={() => {
           if (
-            hasPermission(item.permissionKey, item.requiredOperation) &&
+            hasPermissionSet(
+              permissions,
+              item.permissionKey,
+              item.requiredOperation
+            ) &&
             hasChildren
           ) {
             setIsExpanded(!isExpanded);
           } else if (
-            hasPermission(item.permissionKey, item.requiredOperation) &&
+            hasPermissionSet(
+              permissions,
+              item.permissionKey,
+              item.requiredOperation
+            ) &&
             item.href
           ) {
             window.location.href = item.href;

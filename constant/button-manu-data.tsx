@@ -41,6 +41,18 @@ export const MENU_CONFIG: MenuItem[] = [
       action: "UPDATE",
     },
   },
+  {
+    id: "invoice-air-ticket-create",
+    label: "Create Air Ticket Invoice",
+    // icon: <Plus className="w-4 h-4" />,
+    variant: "default",
+    href: "/invoices/air-ticket/view",
+    // hrefId: "/invoices/air-ticket/:path*",
+    permission: {
+      module: "invoice_air_ticket",
+      action: "READ",
+    },
+  },
   // {
   //   id: "invoice-air-ticket-view",
   //   label: "View Air Ticket Invoices",

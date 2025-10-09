@@ -75,7 +75,7 @@ export interface MenuItem {
   id: string;
   label: string;
   href?: string;
-  icon: React.ComponentType<any>;
+  icon?: React.ComponentType<any>;
   badge?: string;
   isNew?: boolean;
   children?: SubMenuItem[];
@@ -99,7 +99,7 @@ export const menuData: MenuSection[] = [
         label: "Dashboard",
         href: "/dashboard-cms",
         icon: Home,
-        // badge: "3",
+        badge: "3",
         // permissionKey: "dashboard",
         children: [
           {
@@ -1161,9 +1161,9 @@ export const menuData: MenuSection[] = [
   },
 ];
 
-export const userPermissions: PermissionsObject = {
-  projects: ["READ"],
-  dashboardAnalytics: ["CREATE"],
-  clients: ["READ"],
-  sales_report: ["READ"],
-};
+// export const userPermissions: PermissionsObject = {
+//   projects: ["READ"],
+//   dashboardAnalytics: ["CREATE"],
+//   clients: ["READ"],
+//   sales_report: ["READ"],
+// };

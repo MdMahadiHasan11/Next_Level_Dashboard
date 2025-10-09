@@ -86,12 +86,14 @@ export function collectPermittedHrefs(
       if (item.href) {
         hrefs.push(item.href);
       }
+      if (item.hrefId) {
+        hrefs.push(item.hrefId);
+      }
       if (item.children) {
         traverse(item.children);
       }
     });
   }
-
   traverse(permittedItems);
   return hrefs;
 }

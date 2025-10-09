@@ -19,6 +19,8 @@ import {
 import { PermissionButton } from "@/common/permission-button";
 import TestModal from "./modal";
 import { collectPermittedHrefs } from "@/lib/permission-button";
+import { sidebarAllHref } from "@/lib/permission-function";
+import { usePermissions } from "@/hooks/use-permission";
 // Example array of items to map over
 const items = [
   {
@@ -39,8 +41,11 @@ const items = [
 ];
 export default function ExamplePage() {
   const [openModal, setOpenModal] = useState<string | null>(null);
-
+  const { permissions } = usePermissions();
   const allHref = collectPermittedHrefs();
+  const sidebarHref = sidebarAllHref({ permissions });
+  console.log("allHref", allHref);
+  console.log("sidebarHref", sidebarHref);
 
   const handleModalOpen = (tourId: string) => {
     setOpenModal(tourId);

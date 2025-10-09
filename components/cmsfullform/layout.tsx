@@ -6,34 +6,20 @@ import TopNav from "./top-nav";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { ThemeCustomizer } from "../theme-customizer";
+import { usePermissions } from "@/hooks/use-permission";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 type MenuState = "full" | "collapsed" | "hidden";
-type CRUDOperation = "CREATE" | "READ" | "UPDATE" | "DELETE";
-
-type PermissionsObject = {
-  [key: string]: CRUDOperation[];
-};
-
-const exampleUserPermissions: PermissionsObject = {
-  projects: ["READ"],
-
-  dashboardAnalytics: ["CREATE"],
-  clients: ["READ"],
-  sales_report: ["READ"],
-};
 export default function Layout({ children }: LayoutProps) {
   const { theme } = useTheme();
-  const [userPermissions, setUserPermissions] = useState(
-    exampleUserPermissions
-  );
   const [mounted, setMounted] = useState(false);
   const [menuState, setMenuState] = useState<MenuState>("full");
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(256);
+  const { permissions } = usePermissions();
   const [mobileMenuState, setMobileMenuState] =
     useState<MenuState>("collapsed");
   const [previousDesktopState, setPreviousDesktopState] =
@@ -134,7 +120,6 @@ export default function Layout({ children }: LayoutProps) {
         onSetMenuState={setMenuState}
         onSidebarWidthChange={setSidebarWidth}
         onMobileMenuStateChange={setMobileMenuState}
-        userPermissions={userPermissions}
       />
       {isMobile && mobileMenuState === "full" && (
         <div
