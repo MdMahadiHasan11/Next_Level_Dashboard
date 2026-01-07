@@ -48,7 +48,6 @@ export default function Sidebar({
   isMobile,
   sidebarWidth,
   onToggleMenuState,
-  onSetMenuState,
   onSidebarWidthChange,
   onMobileMenuStateChange,
 }: SidebarProps) {
@@ -56,6 +55,8 @@ export default function Sidebar({
   const [searchQuery, setSearchQuery] = useState("");
   const { permissions } = usePermissions();
   const filteredMenuData = mainMenuData({ searchQuery, permissions });
+
+  console.log("filteredMenuData--------------------------------------", filteredMenuData);
 
   function handleNavigation() {
     if (isMobile) {
